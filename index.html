@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WEST REGION PROGRESS UPDATE</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+        /* Custom Font Import if needed, using system fonts for speed */
+        body { font-family: 'Inter', sans-serif; }
+        .bg-undp-blue { background-color: #006EB5; }
+        .text-undp-blue { color: #006EB5; }
+        .bg-undp-light { background-color: #41B6E6; }
+        .text-undp-light { color: #41B6E6; }
+        .border-undp-blue { border-color: #006EB5; }
+        
+        /* Smooth transitions for bars */
+        .progress-bar { transition: width 1s ease-out; }
+    </style>
+</head>
+<body class="min-h-screen bg-[#020b1c] text-slate-200 selection:bg-[#006EB5]/30">
+
+    <!-- Decorative Background -->
+    <div class="fixed top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
+        <div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-[#006EB5]/10 rounded-full blur-[120px]"></div>
+        <div class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-[#41B6E6]/10 rounded-full blur-[120px]"></div>
+    </div>
+
+    <div class="relative z-10 max-w-7xl mx-auto px-6 py-10">
+        
+        <!-- Header -->
+        <header class="mb-12 flex flex-col md:flex-row md:items-start justify-between gap-6 border-b border-[#003366] pb-8 relative overflow-hidden">
+            
+            <div class="relative z-10 pt-4">
+                <div class="flex items-center gap-2 mb-4">
+                    <!-- Added ID for dynamic date update -->
+                    <span id="last-updated-date" class="text-slate-400 text-xs font-semibold uppercase tracking-wider">Updated Dec 2025</span>
+                    <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-[#006EB5] text-white">WEST REGION</span>
+                </div>
+                
+                <!-- Project Title (Regular Font) -->
+                <div class="text-xl md:text-2xl font-normal text-white mb-2">
+                    UNDP Local Peacebuilding and Resilience Project
+                </div>
+
+                <!-- Dashboard Title (Bold/Large Font) -->
+                <h1 class="text-4xl md:text-5xl font-bold text-white tracking-tight leading-tight">
+                    <span class="text-[#006EB5]">West Region Activities Dashboard</span><br>
+                    Deep Dive Meeting
+                </h1>
+            </div>
+
+            <!-- Right Side cleared as requested -->
+            
+        </header>
+
+        <!-- Key Metrics Title (Updated Style) -->
+        <h2 class="text-xl font-bold text-white mb-6 border-l-4 border-[#006EB5] pl-4">
+            Activities Overview
+        </h2>
+
+        <!-- Key Metrics Grid (Updated to 3 columns to match image) -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12" id="stats-grid">
+            <!-- Stats injected by JS -->
+        </div>
+
+        <!-- Charts Section -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-12">
+            
+            <!-- Status Distribution -->
+            <div class="bg-[#002347]/40 border border-[#006EB5]/20 p-6 rounded-2xl backdrop-blur-md flex flex-col items-center relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#006EB5] to-[#41B6E6]"></div>
+                <h3 class="text-slate-200 font-semibold mb-6 flex items-center gap-2 w-full">
+                    <i data-lucide="pie-chart" class="w-4 h-4 text-[#41B6E6]"></i> Status Distribution
+                </h3>
+                <!-- Updated: Changed justify-between to justify-center and added gap-8 for better spacing -->
+                <div class="flex items-center justify-center gap-8 w-full px-2" id="status-chart-container">
+                    <!-- Donut Chart -->
+                </div>
+            </div>
+
+            <!-- Donor Allocation -->
+            <div class="lg:col-span-2 bg-[#002347]/40 border border-[#006EB5]/20 p-6 rounded-2xl backdrop-blur-md flex flex-col relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#006EB5] to-[#41B6E6]"></div>
+                <h3 class="text-slate-200 font-semibold mb-6 flex items-center gap-2">
+                    <i data-lucide="activity" class="w-4 h-4 text-[#41B6E6]"></i> Donors 
+                </h3>
+                <div class="flex flex-col md:flex-row items-center justify-center h-full gap-8 md:gap-16">
+                    <div class="shrink-0" id="donor-chart-container">
+                        <!-- Donut Chart -->
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-6 w-full max-w-md" id="donor-legend">
+                        <!-- Legend Items -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Projects Section -->
+        <div class="space-y-6">
+            <div class="flex items-center justify-between flex-wrap gap-4">
+                <h2 class="text-xl font-semibold text-white flex items-center gap-2">
+                    <div class="w-1.5 h-6 bg-[#006EB5] rounded-full"></div>
+                    <!-- Updated Title to "Activities Cards" -->
+                    <span id="projects-title">Activities Cards</span>
+                </h2>
+                <div class="flex gap-2">
+                    <button onclick="setFilter('all')" id="btn-all" class="px-4 py-1.5 rounded-lg text-sm font-medium transition-colors bg-[#006EB5] text-white shadow-lg shadow-[#006EB5]/20">
+                        All Projects
+                    </button>
+                    <button onclick="setFilter('attention')" id="btn-attention" class="px-4 py-1.5 rounded-lg text-sm font-medium transition-colors bg-[#002347] text-slate-400 border border-[#003366] hover:bg-[#003366]">
+                        Attention / Notes
+                    </button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="projects-grid">
+                <!-- Project Cards injected by JS -->
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="mt-16 pt-8 border-t border-[#003366] flex flex-col md:flex-row justify-between items-center text-slate-500 text-sm gap-4">
+            <div class="flex gap-6">
+                <div class="flex items-center gap-2"><div class="w-2 h-2 rounded-full bg-[#41B6E6]"></div><span>On Track</span></div>
+                <div class="flex items-center gap-2"><div class="w-2 h-2 rounded-full bg-amber-400"></div><span>Attention Required</span></div>
+                <div class="flex items-center gap-2"><div class="w-2 h-2 rounded-full bg-rose-500"></div><span>Action Item</span></div>
+            </div>
+            <p>© 2025 United Nations Development Programme. Internal Use Only.</p>
+        </div>
+
+    </div>
+
+    <!-- Application Logic -->
+    <script>
+        // --- Data Extracted from West Region PDF Source ---
+        const projects = [
+            {
+                id: 1, 
+                region: "West", 
+                donor: "Italy", 
+                activity: "Completion of the auditorium in Qaser Ben Gashir Municipality",
+                percentage: 0, 
+                progressDesc: "(in handover process)", 
+                comments: "RACP finalized and approved. (in handover process)",
+                icon: "mic-2",
+                // Extracted value for consistency since code supports it now
+                value: "USD 516,000"
+            },
+            {
+                id: 2, 
+                region: "West", 
+                donor: "Italy", 
+                activity: "Rehabilitation of the Historical Omar Ben Abdulaziz School in Gaser Bin Gashir Municipality",
+                percentage: 0, 
+                progressDesc: "Evaluation of bids ongoing", 
+                comments: "Evaluation of bids ongoing",
+                icon: "school"
+            },
+            {
+                id: 3, 
+                region: "West", 
+                donor: "Italy", 
+                activity: "Furnishing of Omar Ben Abdulaziz School",
+                percentage: 0, 
+                progressDesc: "Not initiated<br>(pending award from Omar Ben Abdulaziz School)", 
+                comments: "Usage of the building has been confirmed as Community Space.<br>Initiation pending contract award and 30% site work progress (to avoid business incubator furniture case).",
+                icon: "armchair"
+            },
+            {
+                id: 6, 
+                region: "West", 
+                donor: "Italy", 
+                activity: "Tawergha Peacebuilding Local Peacebuilding & Development Plan",
+                percentage: 100, 
+                progressDesc: "(The official launch at MOLG was formally conducted on 1 February.)", 
+                comments: "(The plan was officially handed over)",
+                link: "https://drive.google.com/file/d/1ClvUK0LXINYFZFOKf-voTLmO79QY9Uby/view?usp=sharing",
+                icon: "file-check-2"
+            },
+            {
+                id: 7, 
+                region: "West", 
+                donor: "Italy", 
+                activity: "Supply of Electrical Material for Tawergha Municipality, Libya",
+                percentage: 100, 
+                progressDesc: "Contract Awarded on 9 December", 
+                comments: "",
+                link: "https://drive.google.com/drive/folders/1faNnrq_V2SmOp3b4MUoS9id7QUaZv0qY?usp=sharing",
+                icon: "zap",
+                value: "USD 137,339"
+            }
+        ];
+
+        // --- Helpers ---
+        function createDonutChart(data, size = 160, thickness = 12) {
+            const total = data.reduce((acc, item) => acc + item.value, 0);
+            const radius = (size - thickness) / 2;
+            const circumference = 2 * Math.PI * radius;
+            let currentOffset = 0;
+
+            let svgContent = data.map((item) => {
+                const strokeDasharray = `${(item.value / total) * circumference} ${circumference}`;
+                const strokeDashoffset = -currentOffset;
+                currentOffset += (item.value / total) * circumference;
+
+                return `<circle cx="${size/2}" cy="${size/2}" r="${radius}" fill="transparent" stroke="${item.color}" stroke-width="${thickness}" stroke-dasharray="${strokeDasharray}" stroke-dashoffset="${strokeDashoffset}" stroke-linecap="round" class="hover:opacity-80 transition-opacity duration-300" />`;
+            }).join('');
+
+            return `
+                <div class="relative flex items-center justify-center" style="width: ${size}px; height: ${size}px;">
+                    <svg width="${size}" height="${size}" class="transform -rotate-90">
+                        ${svgContent}
+                    </svg>
+                    <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                        <span class="text-3xl font-bold text-white">${total}</span>
+                        <span class="text-[10px] uppercase tracking-widest text-[#41B6E6]">Total</span>
+                    </div>
+                </div>
+            `;
+        }
+
+        function createProjectCard(project) {
+            const commentsLower = project.comments?.toLowerCase() || "";
+            const progressLower = project.progressDesc?.toLowerCase() || "";
+            
+            // Logic for visual indicators
+            const isAttention = commentsLower.includes('@') || commentsLower.includes('discussion') || commentsLower.includes('submit');
+            const isImportantCost = commentsLower.includes('$') || commentsLower.includes('cost');
+            // New logic for positive updates
+            const isPositive = commentsLower.includes('handed over') || commentsLower.includes('official launch');
+            
+            // Updated Logic: 
+            // "Evaluation Finalized" should show as Pending, not Completed/Finalizing.
+            const isCompleted = (progressLower.includes('finalized') && !progressLower.includes('evaluation')) || project.percentage >= 90;
+            const isNotInitiated = progressLower.includes('not initiated') || progressLower.includes('evaluation finalized');
+
+            // Status Badge
+            let statusBadge = '';
+            if (isCompleted) {
+                 statusBadge = `<span class="flex items-center gap-1 text-emerald-400 text-xs font-bold bg-emerald-500/10 px-2 py-1 rounded-full border border-emerald-500/20"><i data-lucide="check-circle-2" class="w-3 h-3"></i> Finalized</span>`;
+            } else if (isNotInitiated) {
+                 statusBadge = `<span class="flex items-center gap-1 text-slate-400 text-xs font-bold bg-slate-500/10 px-2 py-1 rounded-full border border-slate-500/20"><i data-lucide="pause-circle" class="w-3 h-3"></i> Pending</span>`;
+            } else {
+                 statusBadge = `<span class="flex items-center gap-1 text-amber-400 text-xs font-bold bg-amber-500/10 px-2 py-1 rounded-full border border-amber-500/20"><i data-lucide="loader-2" class="w-3 h-3"></i> In Progress</span>`;
+            }
+
+            // Footer Logic
+            let footerContent = '';
+            
+            // Check for @ mentions first (Action Required)
+            if (project.comments.includes("@")) {
+                footerContent = `
+                    <div class="flex items-start gap-2 text-xs text-rose-300 bg-rose-900/10 p-2 rounded border border-rose-500/20">
+                        <i data-lucide="at-sign" class="w-3.5 h-3.5 shrink-0 mt-0.5"></i>
+                        <span class="font-semibold">Action Required: ${project.comments}</span>
+                    </div>`;
+            } 
+            // Check for Financials
+            else if (isImportantCost) {
+                footerContent = `
+                    <div class="flex items-start gap-2 text-xs text-emerald-300 bg-emerald-900/10 p-2 rounded border border-emerald-500/20">
+                        <i data-lucide="dollar-sign" class="w-3.5 h-3.5 shrink-0 mt-0.5"></i>
+                        <span>${project.comments}</span>
+                    </div>`;
+            }
+            // Check for Positive Updates (Blue)
+            else if (isPositive) {
+                footerContent = `
+                    <div class="flex items-start gap-2 text-xs text-[#41B6E6] bg-[#006EB5]/10 p-2 rounded border border-[#006EB5]/20">
+                        <i data-lucide="check-circle" class="w-3.5 h-3.5 shrink-0 mt-0.5"></i>
+                        <span class="font-semibold">${project.comments}</span>
+                    </div>`;
+            }
+            // Check for Discussions/Notes (Default Attention/Amber)
+            else if (project.comments.length > 0) {
+                 footerContent = `
+                    <div class="flex items-start gap-2 text-xs text-amber-300 bg-amber-900/10 p-2 rounded border border-amber-500/20">
+                        <i data-lucide="info" class="w-3.5 h-3.5 shrink-0 mt-0.5"></i>
+                        <span>${project.comments}</span>
+                    </div>`;
+            }
+             else {
+                footerContent = `
+                    <div class="flex items-start gap-2 text-xs text-slate-400">
+                        <i data-lucide="message-square" class="w-3.5 h-3.5 shrink-0 mt-0.5 text-[#006EB5]"></i>
+                        <span>No additional remarks.</span>
+                    </div>`;
+            }
+            
+            // Link Logic
+            let linkContent = '';
+            if (project.link) {
+                linkContent = `
+                    <a href="${project.link}" target="_blank" rel="noopener noreferrer" class="mt-3 flex items-center gap-1.5 text-xs font-bold text-[#41B6E6] hover:text-white transition-colors group/link w-fit">
+                        View Resource <i data-lucide="arrow-up-right" class="w-3.5 h-3.5 transition-transform group-hover/link:-translate-y-0.5 group-hover/link:translate-x-0.5"></i>
+                    </a>
+                `;
+            }
+
+            // Value Logic (Budget Display)
+            let customContent = '';
+            let valueText = project.value;
+            
+            if (valueText) {
+                customContent = `
+                    <div class="mb-4 relative bg-[#001a33] border border-[#003366] rounded-xl p-4 overflow-hidden group-hover:border-[#006EB5]/50 transition-colors">
+                        <div class="relative z-10 flex items-center justify-between">
+                            <div>
+                                <p class="text-[10px] uppercase tracking-widest text-slate-400 font-semibold mb-1">Value</p>
+                                <div class="text-2xl font-bold text-white tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-white to-[#41B6E6]">
+                                    ${valueText}
+                                </div>
+                            </div>
+                            <div class="h-10 w-10 rounded-full bg-[#006EB5]/20 flex items-center justify-center text-[#41B6E6] border border-[#006EB5]/30">
+                                <i data-lucide="dollar-sign" class="w-5 h-5"></i>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Progress Bar Logic
+            let barColorClass = 'from-[#006EB5] to-[#41B6E6]';
+            let textColorClass = 'text-[#41B6E6]';
+            
+            if (project.percentage >= 90) {
+                barColorClass = 'from-emerald-500 to-emerald-300';
+                textColorClass = 'text-emerald-400';
+            } else if (isNotInitiated) {
+                barColorClass = 'from-slate-600 to-slate-500';
+                textColorClass = 'text-slate-400';
+            }
+
+            let progressSection = `
+                <div>
+                    <div class="flex justify-between text-xs mb-1.5">
+                        <span class="text-slate-400 font-medium">Completion</span>
+                        <span class="${textColorClass} font-bold">${project.percentage}%</span>
+                    </div>
+                    <div class="h-2 w-full bg-[#001a33] rounded-full overflow-hidden border border-[#003366]/50">
+                        <div class="h-full bg-gradient-to-r ${barColorClass} rounded-full" style="width: ${project.percentage}%"></div>
+                    </div>
+                    <p class="text-[10px] text-slate-500 mt-2 uppercase tracking-wider">${project.progressDesc}</p>
+                </div>`;
+
+            return `
+                <div class="group relative overflow-hidden rounded-2xl bg-[#002347]/60 p-6 border border-[#006EB5]/30 backdrop-blur-xl shadow-xl transition-all duration-300 hover:scale-[1.02] hover:shadow-[#006EB5]/20 hover:border-[#006EB5]/80">
+                    <div class="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-[#006EB5]/10 blur-3xl group-hover:bg-[#006EB5]/20 transition-all duration-500"></div>
+                    <div class="relative z-10 flex flex-col h-full justify-between">
+                        <div>
+                            <div class="flex justify-between items-start mb-4">
+                                <div class="flex items-center space-x-2">
+                                    <span class="px-2.5 py-1 rounded-md text-xs font-bold bg-[#006EB5]/20 text-[#41B6E6] border border-[#006EB5]/30">${project.donor}</span>
+                                    ${project.region ? `<span class="px-2 py-1 rounded-md text-xs font-medium text-slate-300 flex items-center gap-1"><i data-lucide="map-pin" class="w-3 h-3"></i> ${project.region}</span>` : ''}
+                                </div>
+                                ${statusBadge}
+                            </div>
+                            <div class="flex items-start gap-3 mb-2">
+                                <div class="p-2 rounded-lg bg-[#001a33] text-[#006EB5] border border-[#003366] shrink-0 mt-1">
+                                    <i data-lucide="${project.icon}" class="w-5 h-5"></i>
+                                </div>
+                                <h3 class="text-sm md:text-base font-semibold text-white leading-snug">${project.activity}</h3>
+                            </div>
+                        </div>
+                        <div class="mt-6 space-y-4">
+                            ${customContent}
+                            ${progressSection}
+                            <div class="pt-4 border-t border-[#003366] min-h-[60px]">
+                                ${footerContent}
+                                ${linkContent}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Updated Function: createStatCard to match image style
+        function createStatCard(title, value, subtext, icon) {
+            return `
+                <div class="bg-[#001226] border border-[#1e293b] p-6 rounded-2xl flex items-center justify-between shadow-lg">
+                    <div>
+                        <p class="text-slate-400 text-sm font-medium">${title}</p>
+                        <h4 class="text-4xl font-bold text-white mt-2 tracking-tight">${value}</h4>
+                        <p class="text-xs text-[#41B6E6] mt-2 font-medium">${subtext}</p>
+                    </div>
+                    <div class="p-4 rounded-xl bg-[#0f172a] border border-[#1e293b]">
+                        <i data-lucide="${icon}" class="w-6 h-6 text-slate-400"></i>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- Main Logic ---
+        let currentFilter = 'all';
+
+        function renderStats() {
+            const total = projects.length;
+            const notInitiated = projects.filter(p => p.progressDesc.toLowerCase().includes('not initiated')).length;
+            const finalized = projects.filter(p => p.percentage >= 100).length; // 100% complete
+            
+            // "Active" = Total minus (Not Initiated + Finalized)
+            // In this specific dataset, ID 6 is 90%, so it's still considered "Active/Working on".
+            const active = total - notInitiated - finalized;
+            
+            // Calculate Average Progress across all projects
+            const totalPercentage = projects.reduce((sum, project) => sum + (project.percentage || 0), 0);
+            const averageProgress = total > 0 ? Math.round(totalPercentage / total) : 0;
+
+            const grid = document.getElementById('stats-grid');
+            // Updated Active Activities card to reflect "Working on" status
+            grid.innerHTML = `
+                ${createStatCard("Total Activities", total, "West Region", "layout-grid")}
+                ${createStatCard("Progress Percentage", `${averageProgress}%`, "Average across all activities", "trending-up")}
+                ${createStatCard("Ongoing Activities", active, "Work in progress", "clock")}
+            `;
+        }
+
+        function renderCharts() {
+            // Status Data
+            const notInitiated = projects.filter(p => p.progressDesc.toLowerCase().includes('not initiated')).length;
+            const finalized = projects.filter(p => p.percentage >= 90).length;
+            const ongoing = projects.length - notInitiated - finalized;
+
+            const statusData = [
+                { value: ongoing, color: '#41B6E6' },   // Light Blue (Ongoing)
+                { value: finalized, color: '#006EB5' }, // Dark Blue (Finalized)
+                { value: notInitiated, color: '#334155' } // Slate (Pending)
+            ];
+            
+            // Render Status Chart & Legend
+            const statusContainer = document.getElementById('status-chart-container');
+            statusContainer.innerHTML = `
+                ${createDonutChart(statusData)}
+                <div class="space-y-3">
+                    <div class="flex items-center gap-3 text-sm"><div class="w-3 h-3 rounded-full bg-[#41B6E6]"></div><span class="text-slate-400">Ongoing/Eval</span><span class="text-white font-bold">${ongoing}</span></div>
+                    <div class="flex items-center gap-3 text-sm"><div class="w-3 h-3 rounded-full bg-[#006EB5]"></div><span class="text-slate-400">Near Finish</span><span class="text-white font-bold">${finalized}</span></div>
+                    <div class="flex items-center gap-3 text-sm"><div class="w-3 h-3 rounded-full bg-[#334155]"></div><span class="text-slate-400">Pending</span><span class="text-white font-bold">${notInitiated}</span></div>
+                </div>
+            `;
+
+            // Donor Data
+            const donors = {};
+            projects.forEach(p => {
+                const name = p.donor.trim(); 
+                donors[name] = (donors[name] || 0) + 1;
+            });
+
+            const colors = ['#006EB5', '#41B6E6', '#008CBA', '#6699CC'];
+            const donorData = Object.keys(donors).map((name, index) => ({
+                name: name,
+                value: donors[name],
+                color: colors[index % colors.length]
+            })).sort((a, b) => b.value - a.value);
+
+            // Render Donor Chart
+            document.getElementById('donor-chart-container').innerHTML = createDonutChart(donorData, 180, 16);
+
+            // Render Donor Legend
+            document.getElementById('donor-legend').innerHTML = donorData.map(d => `
+                <div class="flex items-center gap-4 group">
+                    <div class="w-4 h-4 rounded-full shrink-0 shadow-[0_0_10px_rgba(0,0,0,0.3)]" style="background-color: ${d.color}"></div>
+                    <div class="flex flex-col">
+                        <span class="text-slate-400 text-sm font-medium group-hover:text-white transition-colors">${d.name}</span>
+                        <div class="flex items-baseline gap-2">
+                            <span class="text-2xl font-bold text-white">${d.value}</span>
+                            <span class="text-xs text-slate-500 font-medium">Projects</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderProjects() {
+            const grid = document.getElementById('projects-grid');
+            const title = document.getElementById('projects-title');
+            
+            let filtered = projects;
+            if (currentFilter === 'attention') {
+                filtered = projects.filter(p => {
+                    const commentsLower = p.comments?.toLowerCase() || "";
+                    const progressLower = p.progressDesc?.toLowerCase() || "";
+                    // Filter for mentions, costs, or stalled items
+                    return commentsLower.includes('@') || 
+                           commentsLower.includes('$') || 
+                           commentsLower.includes('delay') || 
+                           commentsLower.includes('discussion');
+                });
+                title.innerText = 'Activities Cards (Attention/Notes)';
+            } else {
+                title.innerText = 'Activities Cards';
+            }
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full py-12 text-center text-slate-500 bg-[#002347]/30 rounded-2xl border border-dashed border-[#003366]">
+                        <p>No projects match this filter.</p>
+                    </div>`;
+            } else {
+                grid.innerHTML = filtered.map(p => createProjectCard(p)).join('');
+            }
+            
+            // Refresh icons after inserting new HTML
+            lucide.createIcons();
+        }
+
+        function setFilter(type) {
+            currentFilter = type;
+            
+            // Update UI buttons
+            const btnAll = document.getElementById('btn-all');
+            const btnAttention = document.getElementById('btn-attention');
+            const activeClass = "bg-[#006EB5] text-white shadow-lg shadow-[#006EB5]/20";
+            const inactiveClass = "bg-[#002347] text-slate-400 border border-[#003366] hover:bg-[#003366]";
+
+            if (type === 'all') {
+                btnAll.className = `px-4 py-1.5 rounded-lg text-sm font-medium transition-colors ${activeClass}`;
+                btnAttention.className = `px-4 py-1.5 rounded-lg text-sm font-medium transition-colors ${inactiveClass}`;
+            } else {
+                btnAll.className = `px-4 py-1.5 rounded-lg text-sm font-medium transition-colors ${inactiveClass}`;
+                btnAttention.className = `px-4 py-1.5 rounded-lg text-sm font-medium transition-colors ${activeClass}`;
+            }
+
+            renderProjects();
+        }
+
+        // --- Date Update Function ---
+        function updateDate() {
+            const dateElement = document.getElementById('last-updated-date');
+            if (dateElement) {
+                const now = new Date();
+                const options = { day: 'numeric', month: 'short', year: 'numeric' };
+                const formattedDate = now.toLocaleDateString('en-GB', options);
+                dateElement.innerText = `Updated ${formattedDate}`;
+            }
+        }
+
+        // --- Init ---
+        window.onload = () => {
+            updateDate(); // Call date update
+            renderStats();
+            renderCharts();
+            renderProjects();
+            lucide.createIcons();
+        };
+
+    </script>
+</body>
+</html>
