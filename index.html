@@ -108,7 +108,7 @@
                     <!-- Updated Title to "Activities Cards" -->
                     <span id="projects-title">Activities Cards</span>
                 </h2>
-                <div class="flex flex-wrap gap-2">
+                <div class="flex flex-wrap items-center gap-2">
                     <button onclick="setFilter('all')" id="btn-all" class="px-4 py-1.5 rounded-lg text-sm font-medium transition-colors bg-[#006EB5] text-white shadow-lg shadow-[#006EB5]/20">
                         All Projects
                     </button>
@@ -121,6 +121,16 @@
                     <button onclick="setFilter('attention')" id="btn-attention" class="px-4 py-1.5 rounded-lg text-sm font-medium transition-colors bg-[#002347] text-slate-400 border border-[#003366] hover:bg-[#003366]">
                         Attention / Notes
                     </button>
+                    
+                    <!-- New Donor Filter Dropdown -->
+                    <div class="relative ml-2">
+                        <select id="donor-filter" onchange="setDonorFilter(this.value)" class="appearance-none bg-[#002347] border border-[#003366] text-slate-300 text-sm rounded-lg focus:ring-[#006EB5] focus:border-[#006EB5] block w-full px-4 py-1.5 pr-8 transition-colors cursor-pointer hover:bg-[#003366] outline-none">
+                            <option value="all">All Donors</option>
+                        </select>
+                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-400">
+                            <i data-lucide="chevron-down" class="w-4 h-4"></i>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -152,6 +162,8 @@
                 id: 1, 
                 region: "West", 
                 donor: "Italy", 
+                donors: ["Italy"],
+                status: "In Progress",
                 activity: "Completion of the auditorium in Qaser Ben Gashir Municipality",
                 percentage: 0, 
                 progressDesc: "(in handover process)", 
@@ -164,6 +176,8 @@
                 id: 2, 
                 region: "West", 
                 donor: "Italy", 
+                donors: ["Italy"],
+                status: "In Progress",
                 activity: "Rehabilitation of the Historical Omar Ben Abdulaziz School in Gaser Bin Gashir Municipality",
                 percentage: 0, 
                 progressDesc: "Awarded", 
@@ -174,6 +188,8 @@
                 id: 3, 
                 region: "West", 
                 donor: "Italy", 
+                donors: ["Italy"],
+                status: "Attention Required",
                 activity: "Furnishing of Omar Ben Abdulaziz School",
                 percentage: 0, 
                 progressDesc: "Not initiated<br>(pending award from Omar Ben Abdulaziz School)", 
@@ -184,6 +200,8 @@
                 id: 6, 
                 region: "West", 
                 donor: "Italy", 
+                donors: ["Italy"],
+                status: "Completed",
                 activity: "Tawergha Peacebuilding Local Peacebuilding & Development Plan",
                 percentage: 100, 
                 progressDesc: "(The official launch at MOLG was formally conducted on 1 February.)", 
@@ -195,6 +213,8 @@
                 id: 7, 
                 region: "West", 
                 donor: "Italy", 
+                donors: ["Italy"],
+                status: "Completed",
                 activity: "Supply of Electrical Material for Tawergha Municipality, Libya",
                 percentage: 100, 
                 progressDesc: "Contract Awarded on 9 December", 
@@ -207,6 +227,8 @@
                 id: 8, 
                 region: "West", 
                 donor: "Italy", 
+                donors: ["Italy"],
+                status: "In Progress",
                 activity: "Strengthening National Capacities for Urban Innovation and Resilience (Urban Tech Initiative)",
                 percentage: 0, 
                 progressDesc: "Starting Date: 24-Mar-2026 | Ending Date: 30-Jul-2026", 
@@ -418,7 +440,24 @@
         }
 
         // --- Main Logic ---
-        let currentFilter = 'all';
+        let selectedStatus = 'all';
+        let selectedDonor = 'all';
+
+        function populateDonorDropdown() {
+            const select = document.getElementById('donor-filter');
+            if (!select) return;
+            
+            // Extract unique donors from projects mapping either to 'donors' array or fallback to single 'donor'
+            const allDonors = projects.flatMap(p => p.donors || [p.donor]);
+            const uniqueDonors = [...new Set(allDonors)].filter(Boolean);
+            
+            uniqueDonors.forEach(donor => {
+                const option = document.createElement('option');
+                option.value = donor;
+                option.textContent = donor;
+                select.appendChild(option);
+            });
+        }
 
         function renderStats() {
             const total = projects.length;
@@ -502,32 +541,49 @@
             const title = document.getElementById('projects-title');
             const summaryContainer = document.getElementById('completed-summary-container');
             
-            let filtered = projects;
-            if (currentFilter === 'attention') {
-                filtered = projects.filter(p => {
-                    const commentsLower = p.comments?.toLowerCase() || "";
-                    const progressLower = p.progressDesc?.toLowerCase() || "";
-                    // Filter for mentions, costs, or stalled items
-                    return commentsLower.includes('@') || 
-                           commentsLower.includes('$') || 
-                           commentsLower.includes('delay') || 
-                           commentsLower.includes('discussion');
-                });
+            // Implemented Dual Filtering Logic
+            let filtered = projects.filter(activity => {
+                const commentsLower = activity.comments?.toLowerCase() || "";
+                const legacyAttention = commentsLower.includes('@') || 
+                                        commentsLower.includes('$') || 
+                                        commentsLower.includes('delay') || 
+                                        commentsLower.includes('discussion');
+
+                const matchesStatus = 
+                    selectedStatus === "all" ||
+                    (selectedStatus === "inprogress" && activity.percentage < 100) ||
+                    (selectedStatus === "completed" && activity.percentage === 100) ||
+                    (selectedStatus === "attention" && (legacyAttention || activity.status === "Attention Required" || activity.status === "Delayed"));
+
+                const activityDonors = activity.donors || [activity.donor];
+
+                const matchesDonor = 
+                    selectedDonor === "all" ||
+                    activityDonors.includes(selectedDonor);
+
+                return matchesStatus && matchesDonor;
+            });
+
+            if (selectedStatus === 'attention') {
                 title.innerText = 'Activities Cards (Attention/Notes)';
-            } else if (currentFilter === 'inprogress') {
-                filtered = projects.filter(p => p.percentage < 100);
+            } else if (selectedStatus === 'inprogress') {
                 title.innerText = 'Activities Cards (In Progress)';
-            } else if (currentFilter === 'completed') {
-                filtered = projects.filter(p => p.percentage === 100);
+            } else if (selectedStatus === 'completed') {
                 title.innerText = 'Activities Cards (Completed 100%)';
             } else {
                 title.innerText = 'Activities Cards';
             }
 
             // Completed Summary Logic
-            if (currentFilter === 'completed' && summaryContainer) {
-                const completedCount = projects.filter(p => p.percentage === 100).length;
-                const totalCount = projects.length;
+            if (selectedStatus === 'completed' && summaryContainer) {
+                // Calculate based on the currently selected donor, ignoring status filter to get the total for that selected donor
+                const donorFiltered = projects.filter(activity => {
+                    const activityDonors = activity.donors || [activity.donor];
+                    return selectedDonor === "all" || activityDonors.includes(selectedDonor);
+                });
+
+                const completedCount = donorFiltered.filter(p => p.percentage === 100).length;
+                const totalCount = donorFiltered.length;
                 const percentage = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
                 
                 summaryContainer.innerHTML = `
@@ -549,7 +605,7 @@
             if (filtered.length === 0) {
                 grid.innerHTML = `
                     <div class="col-span-full py-12 text-center text-slate-500 bg-[#002347]/30 rounded-2xl border border-dashed border-[#003366]">
-                        <p>No projects match this filter.</p>
+                        <p>No projects match this filter combination.</p>
                     </div>`;
             } else {
                 grid.innerHTML = filtered.map(p => createProjectCard(p)).join('');
@@ -560,7 +616,7 @@
         }
 
         function setFilter(type) {
-            currentFilter = type;
+            selectedStatus = type;
             
             // Update UI buttons dynamically based on array
             const filterTypes = ['all', 'inprogress', 'completed', 'attention'];
@@ -574,6 +630,11 @@
                 }
             });
 
+            renderProjects();
+        }
+
+        function setDonorFilter(donor) {
+            selectedDonor = donor;
             renderProjects();
         }
 
@@ -591,6 +652,7 @@
         // --- Init ---
         window.onload = () => {
             updateDate(); // Call date update
+            populateDonorDropdown(); // Generate Donors from Dataset
             renderStats();
             renderCharts();
             renderProjects();
