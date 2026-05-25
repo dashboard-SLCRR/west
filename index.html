@@ -108,15 +108,24 @@
                     <!-- Updated Title to "Activities Cards" -->
                     <span id="projects-title">Activities Cards</span>
                 </h2>
-                <div class="flex gap-2">
+                <div class="flex flex-wrap gap-2">
                     <button onclick="setFilter('all')" id="btn-all" class="px-4 py-1.5 rounded-lg text-sm font-medium transition-colors bg-[#006EB5] text-white shadow-lg shadow-[#006EB5]/20">
                         All Projects
+                    </button>
+                    <button onclick="setFilter('inprogress')" id="btn-inprogress" class="px-4 py-1.5 rounded-lg text-sm font-medium transition-colors bg-[#002347] text-slate-400 border border-[#003366] hover:bg-[#003366]">
+                        In Progress
+                    </button>
+                    <button onclick="setFilter('completed')" id="btn-completed" class="px-4 py-1.5 rounded-lg text-sm font-medium transition-colors bg-[#002347] text-slate-400 border border-[#003366] hover:bg-[#003366]">
+                        Completed 100%
                     </button>
                     <button onclick="setFilter('attention')" id="btn-attention" class="px-4 py-1.5 rounded-lg text-sm font-medium transition-colors bg-[#002347] text-slate-400 border border-[#003366] hover:bg-[#003366]">
                         Attention / Notes
                     </button>
                 </div>
             </div>
+
+            <!-- Completed Summary Container -->
+            <div id="completed-summary-container" style="display: none;"></div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="projects-grid">
                 <!-- Project Cards injected by JS -->
@@ -491,6 +500,7 @@
         function renderProjects() {
             const grid = document.getElementById('projects-grid');
             const title = document.getElementById('projects-title');
+            const summaryContainer = document.getElementById('completed-summary-container');
             
             let filtered = projects;
             if (currentFilter === 'attention') {
@@ -504,8 +514,36 @@
                            commentsLower.includes('discussion');
                 });
                 title.innerText = 'Activities Cards (Attention/Notes)';
+            } else if (currentFilter === 'inprogress') {
+                filtered = projects.filter(p => p.percentage < 100);
+                title.innerText = 'Activities Cards (In Progress)';
+            } else if (currentFilter === 'completed') {
+                filtered = projects.filter(p => p.percentage === 100);
+                title.innerText = 'Activities Cards (Completed 100%)';
             } else {
                 title.innerText = 'Activities Cards';
+            }
+
+            // Completed Summary Logic
+            if (currentFilter === 'completed' && summaryContainer) {
+                const completedCount = projects.filter(p => p.percentage === 100).length;
+                const totalCount = projects.length;
+                const percentage = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
+                
+                summaryContainer.innerHTML = `
+                    <div class="bg-[#002347]/60 border border-[#006EB5]/30 p-5 rounded-xl w-full max-w-sm shadow-xl backdrop-blur-xl">
+                        <div class="flex items-center justify-between text-sm mb-3">
+                            <span class="text-slate-300 font-medium">Completed Activities: <strong class="text-white ml-1">${completedCount}</strong> <span class="text-slate-500 font-normal">/ ${totalCount}</span></span>
+                            <span class="text-emerald-400 font-bold">${percentage}%</span>
+                        </div>
+                        <div class="h-2.5 w-full bg-[#001a33] rounded-full overflow-hidden border border-[#003366]/50">
+                            <div class="h-full bg-gradient-to-r from-emerald-500 to-emerald-300 rounded-full transition-all duration-1000" style="width: ${percentage}%"></div>
+                        </div>
+                    </div>
+                `;
+                summaryContainer.style.display = 'block';
+            } else if (summaryContainer) {
+                summaryContainer.style.display = 'none';
             }
 
             if (filtered.length === 0) {
@@ -524,19 +562,17 @@
         function setFilter(type) {
             currentFilter = type;
             
-            // Update UI buttons
-            const btnAll = document.getElementById('btn-all');
-            const btnAttention = document.getElementById('btn-attention');
+            // Update UI buttons dynamically based on array
+            const filterTypes = ['all', 'inprogress', 'completed', 'attention'];
             const activeClass = "bg-[#006EB5] text-white shadow-lg shadow-[#006EB5]/20";
             const inactiveClass = "bg-[#002347] text-slate-400 border border-[#003366] hover:bg-[#003366]";
 
-            if (type === 'all') {
-                btnAll.className = `px-4 py-1.5 rounded-lg text-sm font-medium transition-colors ${activeClass}`;
-                btnAttention.className = `px-4 py-1.5 rounded-lg text-sm font-medium transition-colors ${inactiveClass}`;
-            } else {
-                btnAll.className = `px-4 py-1.5 rounded-lg text-sm font-medium transition-colors ${inactiveClass}`;
-                btnAttention.className = `px-4 py-1.5 rounded-lg text-sm font-medium transition-colors ${activeClass}`;
-            }
+            filterTypes.forEach(filter => {
+                const btn = document.getElementById(`btn-${filter}`);
+                if (btn) {
+                    btn.className = `px-4 py-1.5 rounded-lg text-sm font-medium transition-colors ${type === filter ? activeClass : inactiveClass}`;
+                }
+            });
 
             renderProjects();
         }
