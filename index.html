@@ -156,7 +156,7 @@
                 activity: "Rehabilitation of the Historical Omar Ben Abdulaziz School in Gaser Bin Gashir Municipality",
                 percentage: 0, 
                 progressDesc: "Awarded", 
-                comments: "Contract awarded. Handover of the site on Sunday, 29 March.",
+                comments: "Contract awarded. Handover of the site on 2 August 2026.",
                 icon: "school"
             },
             {
@@ -203,14 +203,53 @@
                 region: "West", 
                 donor: "Italy", 
                 donors: ["Italy"],
-                status: "In Progress",
+                status: "Completed",
                 activity: "Strengthening National Capacities for Urban Innovation and Resilience (Urban Tech Initiative)",
-                percentage: 80, 
+                percentage: 100, 
                 progressDesc: "Starting Date: 24-Mar-2026 | Ending Date: 30-Jul-2026", 
                 comments: "",
-                link: "https://drive.google.com/drive/folders/1j_EXR4T7yzDReC0Q-R_YSyUnZcFOZ9uU?usp=sharing",
+                link: "https://drive.google.com/drive/folders/1DtfVVZq6LjdTNtrWMFZQ1cKpSjFd7j-e?usp=drive_link",
                 icon: "lightbulb",
                 value: "USD 143,625.00"
+            },
+            {
+                id: 9, 
+                region: "Tarhuna", 
+                donor: "IsDB", 
+                donorDisplay: "IsDB <span class='block text-[9px] font-medium opacity-80 mt-0.5'>(Track 2)</span>",
+                donors: ["IsDB"],
+                status: "In Progress",
+                activity: "Livelihoods Assessment",
+                percentage: 10, 
+                progressDesc: "The inception report has been received and is still under review.", 
+                comments: "Waiting for confirmation on the inception report.",
+                icon: "clipboard-list",
+                value: "USD 39,600"
+            },
+            {
+                id: 10, 
+                region: "Tripoli", 
+                donor: "AfDB", 
+                donors: ["AfDB"],
+                status: "In Progress",
+                activity: "SME Development and Entrepreneurship Ecosystem Support",
+                percentage: 50, 
+                progressDesc: "The activity is currently under implementation and has reached 50% completion.", 
+                comments: "The agreement will end on 24 September 2026.",
+                icon: "briefcase",
+                value: "USD 10,525"
+            },
+            {
+                id: 11,
+                region: "West",
+                donor: "Italy",
+                donors: ["Italy"],
+                status: "Planned / Under Preparation",
+                activity: "Developing Building Codes",
+                percentage: 0,
+                progressDesc: "The activity is currently in the early planning and preparation stage.",
+                comments: "Further details and the implementation timeline will be added once confirmed.",
+                icon: "book-open"
             }
         ];
 
@@ -355,7 +394,7 @@
                         <div>
                             <div class="flex justify-between items-start mb-4">
                                 <div class="flex items-center space-x-2">
-                                    <span class="px-2.5 py-1 rounded-md text-xs font-bold bg-[#006EB5]/20 text-[#41B6E6] border border-[#006EB5]/30">${project.donor}</span>
+                                    <span class="px-2.5 py-1 rounded-md text-xs font-bold bg-[#006EB5]/20 text-[#41B6E6] border border-[#006EB5]/30 text-center leading-tight">${project.donorDisplay || project.donor}</span>
                                 </div>
                                 ${statusBadge}
                             </div>
