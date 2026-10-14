@@ -143,7 +143,7 @@
                 status: "In Progress",
                 activity: "Design and Maintenance Works for the University of Tripoli Main Meeting Hall and Two Classrooms",
                 percentage: 10, 
-                progressDesc: "Advertised", 
+                progressDesc: "Advertised<br>(Award within the first half of November.)", 
                 comments: "(submitted to procurement)<br>- The proposed completion duration is 120 days.",
                 link: "https://drive.google.com/drive/folders/18flWyKVe6d1fq0P26b3rbBnV1NslMcCK?usp=sharing",
                 icon: "mic-2",
@@ -248,10 +248,10 @@
                 region: "West",
                 donor: "Italy",
                 donors: ["Italy"],
-                status: "Planned / Under Preparation",
+                status: "Planning",
                 activity: "Developing Building Codes",
                 percentage: 0,
-                progressDesc: "The activity is currently in the early planning and preparation stage.",
+                progressDesc: "will be Awarded within the first half of November.",
                 comments: "Further details and the implementation timeline will be added once confirmed.",
                 icon: "book-open"
             }
@@ -304,7 +304,8 @@
             } else if (isNotInitiated) {
                  statusBadge = `<span class="flex items-center gap-1 text-slate-400 text-xs font-bold bg-slate-500/10 px-2 py-1 rounded-full border border-slate-500/20"><i data-lucide="pause-circle" class="w-3 h-3"></i> Pending</span>`;
             } else {
-                 statusBadge = `<span class="flex items-center gap-1 text-amber-400 text-xs font-bold bg-amber-500/10 px-2 py-1 rounded-full border border-amber-500/20"><i data-lucide="loader-2" class="w-3 h-3"></i> In Progress</span>`;
+                 const badgeText = project.status === 'Planning' ? 'Planning' : 'In Progress';
+                 statusBadge = `<span class="flex items-center gap-1 text-amber-400 text-xs font-bold bg-amber-500/10 px-2 py-1 rounded-full border border-amber-500/20"><i data-lucide="loader-2" class="w-3 h-3"></i> ${badgeText}</span>`;
             }
 
             let footerContent = '';
