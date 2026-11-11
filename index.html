@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WEST REGION PROGRESS UPDATE</title>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Lucide Icons -->
@@ -43,14 +47,17 @@
             </div>
         </header>
 
+        <!-- Section Title -->
         <h2 class="text-xl font-bold text-white mb-6 border-l-4 border-[#006EB5] pl-4">
             Activities Overview
         </h2>
 
+        <!-- High-Level Stats Grid -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12" id="stats-grid">
             <!-- Stats injected by JS -->
         </div>
 
+        <!-- Charts Section -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-12">
             <!-- Status Distribution -->
             <div class="bg-[#002347]/40 border border-[#006EB5]/20 p-6 rounded-2xl backdrop-blur-md flex flex-col items-center relative overflow-hidden">
@@ -59,7 +66,7 @@
                     <i data-lucide="pie-chart" class="w-4 h-4 text-[#41B6E6]"></i> Status Distribution
                 </h3>
                 <div class="flex items-center justify-center gap-8 w-full px-2" id="status-chart-container">
-                    <!-- Donut Chart -->
+                    <!-- Donut Chart injected by JS -->
                 </div>
             </div>
 
@@ -76,6 +83,7 @@
             </div>
         </div>
 
+        <!-- Activities Filter & Cards Section -->
         <div class="space-y-6">
             <div class="flex items-center justify-between flex-wrap gap-4">
                 <h2 class="text-xl font-semibold text-white flex items-center gap-2">
@@ -116,6 +124,7 @@
                 <!-- Content injected by JS -->
             </div>
 
+            <!-- Cards Grid -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="projects-grid">
                 <!-- Project Cards injected by JS -->
             </div>
@@ -134,6 +143,7 @@
     </div>
 
     <script>
+        // Project Data Repository
         const projects = [
             {
                 id: 1, 
@@ -143,8 +153,8 @@
                 status: "In Progress",
                 activity: "Design and Maintenance Works for the University of Tripoli Main Meeting Hall and Two Classrooms",
                 percentage: 0, 
-                progressDesc: "Advertised<br>The tender deadline has been extended", 
-                comments: "(submitted to procurement)<br>- The proposed completion duration is 120 days.",
+                progressDesc: "In the evaluation stage", 
+                comments: "In the evaluation stage<br>- The proposed completion duration is 120 days.",
                 link: "https://drive.google.com/drive/folders/18flWyKVe6d1fq0P26b3rbBnV1NslMcCK?usp=sharing",
                 icon: "mic-2",
                 value: "USD 379,000"
@@ -235,13 +245,13 @@
                 region: "Tripoli", 
                 donor: "AfDB", 
                 donors: ["AfDB"],
-                status: "In Progress",
-            activity: "SME Development and Entrepreneurship Ecosystem Support",
-            percentage: 90, 
-            progressDesc: "Ongoing", 
-            comments: "",
-            icon: "briefcase",
-            value: "USD 10,525"
+                status: "Completed",
+                activity: "SME Development and Entrepreneurship Ecosystem Support",
+                percentage: 100, 
+                progressDesc: "Completed", 
+                comments: "",
+                icon: "briefcase",
+                value: "USD 10,525"
             },
             {
                 id: 11,
@@ -260,6 +270,7 @@
         let currentStatusFilter = 'all';
         let currentDonorFilter = 'all';
 
+        // Generates an SVG Donut Chart
         function createDonutChart(data, size = 160, thickness = 12) {
             const total = data.reduce((acc, item) => acc + item.value, 0);
             const radius = (size - thickness) / 2;
@@ -267,6 +278,7 @@
             let currentOffset = 0;
 
             let svgContent = data.map((item) => {
+                if (item.value === 0) return '';
                 const strokeDasharray = `${(item.value / total) * circumference} ${circumference}`;
                 const strokeDashoffset = -currentOffset;
                 currentOffset += (item.value / total) * circumference;
@@ -287,6 +299,7 @@
             `;
         }
 
+        // Generates individual Activity Card HTML
         function createProjectCard(project) {
             const commentsLower = project.comments?.toLowerCase() || "";
             const progressLower = project.progressDesc?.toLowerCase() || "";
@@ -423,6 +436,7 @@
             `;
         }
 
+        // Generates top-level KPI stat card HTML
         function createStatCard(title, value, subtext, icon) {
             return `
                 <div class="bg-[#001226] border border-[#1e293b] p-6 rounded-2xl flex items-center justify-between shadow-lg">
@@ -438,6 +452,7 @@
             `;
         }
 
+        // Populates the Donor dropdown filter
         function populateDonors() {
             const select = document.getElementById('donor-filter');
             const uniqueDonors = new Set();
@@ -458,6 +473,7 @@
             });
         }
 
+        // Renders the top 3 KPI stat cards
         function renderStats() {
             const total = projects.length;
             const notInitiated = projects.filter(p => p.progressDesc.toLowerCase().includes('not initiated')).length;
@@ -473,6 +489,7 @@
             `;
         }
 
+        // Renders Status and Donor Donut Charts
         function renderCharts() {
             const notInitiated = projects.filter(p => p.progressDesc.toLowerCase().includes('not initiated')).length;
             const finalized = projects.filter(p => p.percentage >= 90).length;
@@ -521,6 +538,7 @@
             `).join('');
         }
 
+        // Filters and renders the Project Cards
         function renderProjects() {
             const grid = document.getElementById('projects-grid');
             const summaryBox = document.getElementById('completed-summary');
@@ -577,6 +595,7 @@
             lucide.createIcons();
         }
 
+        // Updates status filter button state and re-renders cards
         function setStatusFilter(type) {
             currentStatusFilter = type;
             
@@ -599,11 +618,13 @@
             renderProjects();
         }
 
+        // Updates donor filter state and re-renders cards
         function setDonorFilter(val) {
             currentDonorFilter = val;
             renderProjects();
         }
 
+        // Sets the header date to the current date
         function updateDate() {
             const dateElement = document.getElementById('last-updated-date');
             if (dateElement) {
@@ -614,7 +635,7 @@
             }
         }
 
-        // Init
+        // Initialize Dashboard on load
         window.onload = () => {
             updateDate();
             populateDonors();
@@ -623,7 +644,6 @@
             renderProjects();
             lucide.createIcons();
         };
-
     </script>
 </body>
 </html>
